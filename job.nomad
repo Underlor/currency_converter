@@ -71,7 +71,7 @@ job "currency_converter" {
           "traefik.backend.healthcheck.interval=10s",
           "traefik.backend.loadbalancer.sticky=true",
         ]
-        name = "currency_converter"
+        name = "currency-converter"
         port = "http"
         check {
           name = "converter.alexue4.ru instance alive"
@@ -130,7 +130,7 @@ job "currency_converter" {
       }
 
       service {
-        name = "currency_converter-celerybeat"
+        name = "currency-converter-celerybeat"
       }
 
       logs {
@@ -178,7 +178,7 @@ job "currency_converter" {
       }
 
       service {
-        name = "currency_converter-celeryd"
+        name = "currency-converter-celeryd"
       }
 
       logs {
