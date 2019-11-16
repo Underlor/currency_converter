@@ -104,7 +104,6 @@ CELERY_TASK_RESULT_EXPIRES = 86400
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_DEFAULT_QUEUE = 'currency_converter'
 CELERY_TASK_DEFAULT_EXCHANGE = 'currency_converter'
-CELERY_RESULT_BACKEND = 'django-db'
 
 # Parser configuration
 EXCHANGE_RATE_URL = OPTIONAL('NEWS_URL', 'https://openexchangerates.org/api/latest.json')
