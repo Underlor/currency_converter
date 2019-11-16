@@ -1,0 +1,24 @@
+version: '3'
+services:
+  currency_converter_tests:
+    depends_on:
+      - pg_db
+    build:
+      context: .
+    environment:
+      - DJANGO_SETTINGS_MODULE=currency_converter.settings
+      - DB_NAME=currency_converter
+      - DB_USER=currency_converter
+      - DB_PASSWORD=currency_converter
+      - DB_HOST=pg_db
+      - DB_PORT=5432
+      - WAIT_HOSTS=pg_db:5432
+      - ENTRYPOINT_FILE=/app/entrypoint-tests.sh
+    ports:
+      - "8000:8000"
+
+  pg_db:
+    image: postgres:11.4-alpine
+    environment:
+      - POSTGRES_USER=currency_converter
+      - POSTGRES_PASSWORD=currency_converter

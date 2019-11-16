@@ -1,0 +1,8 @@
+.git
+.pytest_cache
+__pycache__
+.idea
+.gitlab-ci.yml
+.dockerignore
+*.nomad
+Dockerfile

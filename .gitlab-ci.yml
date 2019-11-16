@@ -1,0 +1,38 @@
+variables:
+  CI_REGISTRY_IMAGE: ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_SHORT_SHA}
+
+stages:
+  - build
+  - test
+  - deploy
+build-image:
+  stage: build
+  only:
+    - branches
+  tags:
+    - builder
+  script:
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+    - docker build -t ${CI_REGISTRY_IMAGE} .
+    - docker push ${CI_REGISTRY_IMAGE}
+  after_script:
+    - docker logout ${CI_REGISTRY}
+
+test:
+  stage: test
+  only:
+    - branches
+  tags:
+    - builder
+  script:
+    - docker run --rm --network host -e DB_HOST=10.0.0.6 -e DB_USER=currency_converter -e DB_PASSWORD=${DB_PASSWORD} --entrypoint "pytest" ${CI_REGISTRY_IMAGE}
+
+deploy-production:
+  stage: deploy
+  only:
+    - /master/
+  tags:
+    - deploy-shell
+#  when: manual
+  script:
+    - levant deploy -force-count

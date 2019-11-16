@@ -1,0 +1,66 @@
+version: '3'
+services:
+  currency_converter:
+    depends_on:
+      - pg_db
+    build:
+      context: .
+    environment:
+      - DJANGO_SETTINGS_MODULE=currency_converter.settings
+      - DB_NAME=currency_converter
+      - DB_USER=currency_converter
+      - DB_PASSWORD=currency_converter
+      - DB_HOST=pg_db
+      - DB_PORT=5432
+      - WAIT_HOSTS=pg_db:5432
+      - ENTRYPOINT_FILE=/app/entrypoint.sh
+      - LISTEN_PORT=8000
+    ports:
+      - "8000:8000"
+
+  celery:
+    build:
+      context: .
+    environment:
+      - DJANGO_SETTINGS_MODULE=currency_converter.settings
+      - DB_NAME=currency_converter
+      - DB_USER=currency_converter
+      - DB_PASSWORD=currency_converter
+      - DB_HOST=pg_db
+      - DB_PORT=5432
+      - BROKER_HOST=rabbit
+      - WAIT_HOSTS=pg_db:5432
+      - ENTRYPOINT_FILE=/app/entrypoint-celery.sh
+    depends_on:
+      - rabbit
+      - pg_db
+
+  celery_beat:
+    build:
+      context: .
+    environment:
+      - DJANGO_SETTINGS_MODULE=currency_converter.settings
+      - DB_NAME=currency_converter
+      - DB_USER=currency_converter
+      - DB_PASSWORD=currency_converter
+      - DB_HOST=pg_db
+      - DB_PORT=5432
+      - BROKER_HOST=rabbit
+      - WAIT_HOSTS=pg_db:5432
+      - ENTRYPOINT_FILE=/app/entrypoint-celery-beat.sh
+    depends_on:
+      - rabbit
+      - pg_db
+
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:3.7.15-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  pg_db:
+    image: postgres:11.4-alpine
+    environment:
+      - POSTGRES_USER=currency_converter
+      - POSTGRES_PASSWORD=currency_converter
