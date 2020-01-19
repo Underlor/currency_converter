@@ -171,7 +171,7 @@ job "currency_converter" {
 
       resources {
         cpu = 200
-        memory = 200
+        memory = 400
         network {
           mbits = 20
         }
