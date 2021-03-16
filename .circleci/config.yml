@@ -5,13 +5,15 @@ orbs:
 
 jobs:
   build:
+    environment:
+      - CI_REGISTRY_IMAGE: 
     docker:
       - image: docker:17.05.0-ce-git
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          command: docker build -t ${CI_REGISTRY_IMAGE} .
+          command: docker build -t ${CIRCLE_PROJECT_USERNAME} .
           name: build
 
 workflows:
